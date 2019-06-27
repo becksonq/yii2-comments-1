@@ -5,7 +5,7 @@
  * @link https://rmrevin.ru
  */
 
-namespace rmrevin\yii\module\Comments;
+namespace beckson\yii\module\comments;
 
 use rmrevin\yii\module\Comments\forms\CommentCreateForm;
 use rmrevin\yii\module\Comments\models\Comment;

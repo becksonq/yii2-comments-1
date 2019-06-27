@@ -1,6 +1,6 @@
 {
-  "name": "rmrevin/yii2-comments",
-  "description": "Comments module for Yii2",
+  "name": "beckson/yii2-comments",
+  "description": "Comments module for Yii2 based rmrevin/yii2-comments",
   "keywords": [
     "yii",
     "comment",
@@ -11,14 +11,13 @@
   "license": "MIT",
   "minimum-stability": "stable",
   "support": {
-    "issues": "https://github.com/rmrevin/yii2-comments/issues",
-    "source": "https://github.com/rmrevin/yii2-comments"
+    "issues": "https://github.com/becksonq/yii2-comments-1/issues",
+    "source": "https://github.com/becksonq/yii2-comments-1"
   },
   "authors": [
     {
-      "name": "Roman Revin",
-      "email": "xgismox@gmail.com",
-      "homepage": "http://rmrevin.ru/"
+      "name": "beckson",
+      "email": "becksonq@gmail.com"
     }
   ],
   "require": {
@@ -29,7 +28,7 @@
   },
   "autoload": {
     "psr-4": {
-      "rmrevin\\yii\\module\\Comments\\": ""
+      "beckson\\yii\\module\\comments\\": ""
     }
   },
   "extra": {
