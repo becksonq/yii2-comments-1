@@ -1,17 +1,14 @@
 <?php
-/**
- * CommentFormWidget.php
- * @author Revin Roman
- * @link https://rmrevin.ru
- */
 
-namespace rmrevin\yii\module\Comments\widgets;
+namespace beckson\yii\module\comments\widgets;
 
-use rmrevin\yii\module\Comments;
+use beckson\yii\module\Comments;
+use beckson\yii\module\comments\models\Comment;
+use rmrevin\yii\module\Comments\forms\CommentCreateForm;
 
 /**
  * Class CommentFormWidget
- * @package rmrevin\yii\module\Comments\widgets
+ * @package beckson\yii\module\comments\widgets
  */
 class CommentFormWidget extends \yii\base\Widget
 {
@@ -22,8 +19,8 @@ class CommentFormWidget extends \yii\base\Widget
     /** @var string */
     public $entity;
 
-    /** @var Comments\models\Comment */
-    public $Comment;
+    /** @var Comment */
+    public $comment;
 
     /** @var string */
     public $anchor = '#comment-%d';
@@ -35,21 +32,21 @@ class CommentFormWidget extends \yii\base\Widget
     {
         CommentFormAsset::register($this->getView());
 
-        /** @var Comments\forms\CommentCreateForm $CommentCreateForm */
-        $CommentCreateFormClassData = Comments\Module::instance()->model(
+        /** @var CommentCreateForm $CommentCreateForm */
+        $commentCreateFormClassData = comments\Module::instance()->model(
             'commentCreateForm', [
-                'Comment' => $this->Comment,
+                'Comment' => $this->comment,
                 'entity' => $this->entity
             ]
         );
 
-        $CommentCreateForm = \Yii::createObject($CommentCreateFormClassData);
+        $commentCreateForm = \Yii::createObject($commentCreateFormClassData);
 
-        if ($CommentCreateForm->load(\Yii::$app->getRequest()->post())) {
-            if ($CommentCreateForm->validate()) {
-                if ($CommentCreateForm->save()) {
+        if ($commentCreateForm->load(\Yii::$app->getRequest()->post())) {
+            if ($commentCreateForm->validate()) {
+                if ($commentCreateForm->save()) {
                     \Yii::$app->getResponse()
-                        ->refresh(sprintf($this->anchor, $CommentCreateForm->Comment->id))
+                        ->refresh(sprintf($this->anchor, $commentCreateForm->Comment->id))
                         ->send();
 
                     exit;
@@ -58,7 +55,7 @@ class CommentFormWidget extends \yii\base\Widget
         }
 
         return $this->render('comment-form', [
-            'CommentCreateForm' => $CommentCreateForm,
+            'commentCreateForm' => $commentCreateForm,
         ]);
     }
 

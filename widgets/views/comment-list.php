@@ -1,54 +1,48 @@
 <?php
-/**
- * comment-list.php
- * @author Revin Roman
- * @link https://rmrevin.ru
- *
- * @var yii\web\View $this
- * @var yii\data\ActiveDataProvider $CommentsDataProvider
- */
 
 use rmrevin\yii\fontawesome\FA;
-use rmrevin\yii\module\Comments;
+use beckson\yii\module\Comments;
 use yii\helpers\Html;
 use yii\helpers\Json;
+use beckson\yii\module\comments\interfaces\CommentatorInterface;
 
-/** @var Comments\widgets\CommentListWidget $CommentListWidget */
-$CommentListWidget = $this->context;
+/** @var \beckson\yii\module\comments\widgets\CommentListWidget $commentListWidget */
+$commentListWidget = $this->context;
 
 $comments = [];
 
 echo Html::tag('h3', Yii::t('app', 'Comments'), ['class' => 'comment-title']);
 
 echo yii\widgets\ListView::widget([
-    'dataProvider' => $CommentsDataProvider,
-    'options' => ['class' => 'comments-list'],
-    'layout' => "{items}\n{pager}",
-    'itemView' =>
-        function (Comments\models\Comment $Comment, $key, $index, yii\widgets\ListView $Widget)
-        use (&$comments, $CommentListWidget) {
+    /** @var $dataProvider */
+    'dataProvider' => $dataProvider,
+    'options'      => ['class' => 'comments-list'],
+    'layout'       => "{items}\n{pager}",
+    'itemView'     =>
+        function (comments\models\Comment $comment, $index, yii\widgets\ListView $widget)
+        use (&$comments, $commentListWidget) {
             ob_start();
 
-            $Formatter = Yii::$app->getFormatter();
+            $formatter = Yii::$app->getFormatter();
 
-            $Author = $Comment->author;
+            $author = $comment->author;
 
-            $comments[$Comment->id] = $Comment->attributes;
+            $comments[$comment->id] = $comment->attributes;
 
             $options = [
-                'data-comment' => $Comment->id,
-                'class' => 'row comment',
+                'data-comment' => $comment->id,
+                'class'        => 'row comment',
             ];
 
             if ($index === 0) {
                 Html::addCssClass($options, 'first');
             }
 
-            if ($index === ($Widget->dataProvider->getCount() - 1)) {
+            if ($index === ($widget->dataProvider->getCount() - 1)) {
                 Html::addCssClass($options, 'last');
             }
 
-            if ($Comment->isDeleted()) {
+            if ($comment->isDeleted()) {
                 Html::addCssClass($options, 'deleted');
             }
 
@@ -61,13 +55,13 @@ echo yii\widgets\ListView::widget([
                         $name = Yii::t('app', 'Unknown author');
                         $url = false;
 
-                        if (empty($Author)) {
-                            $name = empty($Comment->from) ? $name : $Comment->from;
-                        } elseif ($Author instanceof Comments\interfaces\CommentatorInterface) {
-                            $avatar = $Author->getCommentatorAvatar();
-                            $name = $Author->getCommentatorName();
+                        if (empty($author)) {
+                            $name = empty($comment->from) ? $name : $comment->from;
+                        } elseif ($author instanceof CommentatorInterface) {
+                            $avatar = $author->getCommentatorAvatar();
+                            $name = $author->getCommentatorName();
                             $name = empty($name) ? Yii::t('app', 'Unknown author') : $name;
-                            $url = $Author->getCommentatorUrl();
+                            $url = $author->getCommentatorUrl();
                         }
 
                         $name_html = Html::tag('strong', $name);
@@ -80,7 +74,7 @@ echo yii\widgets\ListView::widget([
                         } else {
                             $avatar_html = Html::img($avatar, [
                                 'class' => 'avatar',
-                                'alt' => Yii::t('app', 'Author avatar'),
+                                'alt'   => Yii::t('app', 'Author avatar'),
                                 'title' => $name,
                             ]);
                         }
@@ -93,39 +87,40 @@ echo yii\widgets\ListView::widget([
                             echo $name_html;
                         }
 
-                        if ((time() - $Comment->created_at) > (86400 * 2)) {
-                            echo Html::tag('span', $Formatter->asDatetime($Comment->created_at), ['class' => 'date']);
+                        if ((time() - $comment->created_at) > (86400 * 2)) {
+                            echo Html::tag('span', $formatter->asDatetime($comment->created_at), ['class' => 'date']);
                         } else {
-                            echo Html::tag('span', $Formatter->asRelativeTime($Comment->created_at), ['class' => 'date']);
+                            echo Html::tag('span', $formatter->asRelativeTime($comment->created_at),
+                                ['class' => 'date']);
                         }
                         ?>
                     </div>
                     <div class="text">
                         <?php
-                        if ($Comment->isDeleted()) {
+                        if ($comment->isDeleted()) {
                             echo Yii::t('app', 'Comment was deleted.');
                         } else {
-                            echo yii\helpers\Markdown::process($Comment->text, 'gfm-comment');
+                            echo yii\helpers\Markdown::process($comment->text, 'gfm-comment');
 
-                            if ($Comment->isEdited()) {
+                            if ($comment->isEdited()) {
                                 echo Html::tag('small', Yii::t('app', 'Updated at {date-relative}', [
-                                    'date' => $Formatter->asDate($Comment->updated_at),
-                                    'date-time' => $Formatter->asDatetime($Comment->updated_at),
-                                    'date-relative' => $Formatter->asRelativeTime($Comment->updated_at),
+                                    'date'          => $formatter->asDate($comment->updated_at),
+                                    'date-time'     => $formatter->asDatetime($comment->updated_at),
+                                    'date-relative' => $formatter->asRelativeTime($comment->updated_at),
                                 ]));
                             }
                         }
                         ?>
                     </div>
                     <?php
-                    if ($Comment->canUpdate() && !$Comment->isDeleted()) {
+                    if ($comment->canUpdate() && !$comment->isDeleted()) {
                         ?>
                         <div class="edit">
                             <?php
                             echo Comments\widgets\CommentFormWidget::widget([
-                                'entity' => $CommentListWidget->entity,
-                                'Comment' => $Comment,
-                                'anchor' => $CommentListWidget->anchorAfterUpdate,
+                                'entity'  => $commentListWidget->entity,
+                                'Comment' => $comment,
+                                'anchor'  => $commentListWidget->anchorAfterUpdate,
                             ]);
                             ?>
                         </div>
@@ -134,29 +129,29 @@ echo yii\widgets\ListView::widget([
                     ?>
                     <div class="actions">
                         <?php
-                        if (!$Comment->isDeleted()) {
-                            if ($Comment->canCreate()) {
+                        if (!$comment->isDeleted()) {
+                            if ($comment->canCreate()) {
                                 echo Html::a(FA::icon('reply') . ' ' . Yii::t('app', 'Reply'), '#', [
-                                    'class' => 'btn btn-info btn-xs',
+                                    'class'     => 'btn btn-info btn-xs',
                                     'data-role' => 'reply',
                                 ]);
                             }
 
-                            if ($Comment->canUpdate()) {
+                            if ($comment->canUpdate()) {
                                 echo Html::a(
                                     FA::icon('pencil') . ' ' . Yii::t('app', 'Edit'),
                                     '#',
                                     [
                                         'data-role' => 'edit',
-                                        'class' => 'btn btn-primary btn-xs',
+                                        'class'     => 'btn btn-primary btn-xs',
                                     ]
                                 );
                             }
 
-                            if ($Comment->canDelete()) {
+                            if ($comment->canDelete()) {
                                 echo Html::a(
                                     FA::icon('times') . ' ' . Yii::t('app', 'Delete'),
-                                    ['', 'delete-comment' => $Comment->id],
+                                    ['', 'delete-comment' => $comment->id],
                                     ['class' => 'btn btn-danger btn-xs']
                                 );
                             }
@@ -171,20 +166,20 @@ echo yii\widgets\ListView::widget([
         }
 ]);
 
-/** @var Comments\models\Comment $CommentModel */
-$CommentModel = \Yii::createObject(Comments\Module::instance()->model('comment'));
+/** @var \beckson\yii\module\comments\models\Comment $commentModel */
+$commentModel = \Yii::createObject(Comments\Module::instance()->model('comment'));
 
-if ($CommentListWidget->showCreateForm && $CommentModel::canCreate()) {
+if ($commentListWidget->showCreateForm && $commentModel::canCreate()) {
     echo Html::tag('h3', Yii::t('app', 'Add comment'), ['class' => 'comment-title']);
 
     echo Comments\widgets\CommentFormWidget::widget([
-        'theme' => $CommentListWidget->theme,
-        'entity' => $CommentListWidget->entity,
-        'Comment' => $CommentModel,
-        'anchor' => $CommentListWidget->anchorAfterUpdate,
+        'theme'   => $commentListWidget->theme,
+        'entity'  => $commentListWidget->entity,
+        'Comment' => $commentModel,
+        'anchor'  => $commentListWidget->anchorAfterUpdate,
     ]);
 }
 
-$CommentListWidget
+$commentListWidget
     ->getView()
-    ->registerJs('jQuery("#' . $CommentListWidget->options['id'] . '").yiiCommentsList(' . Json::encode($comments) . ');');
+    ->registerJs('jQuery("#' . $commentListWidget->options['id'] . '").yiiCommentsList(' . Json::encode($comments) . ');');

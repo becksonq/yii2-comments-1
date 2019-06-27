@@ -1,19 +1,19 @@
 <?php
-/**
- * CommentListWidget.php
- * @author Revin Roman
- * @link https://rmrevin.ru
- */
 
-namespace rmrevin\yii\module\Comments\widgets;
+namespace beckson\yii\module\comments\widgets;
 
-use rmrevin\yii\module\Comments;
+use beckson\yii\module\comments;
+use yii\base\Widget;
+use yii\data\ActiveDataProvider;
+use yii\helpers\Html;
+use yii\web\NotFoundHttpException;
+use yii\web\ForbiddenHttpException;
 
 /**
  * Class CommentListWidget
- * @package rmrevin\yii\module\Comments\widgets
+ * @package beckson\yii\module\comments\widgets
  */
-class CommentListWidget extends \yii\base\Widget
+class CommentListWidget extends Widget
 {
 
     /** @var string|null */
@@ -33,9 +33,9 @@ class CommentListWidget extends \yii\base\Widget
 
     /** @var array */
     public $pagination = [
-        'pageParam' => 'page',
+        'pageParam'     => 'page',
         'pageSizeParam' => 'per-page',
-        'pageSize' => 20,
+        'pageSize'      => 20,
         'pageSizeLimit' => [1, 50],
     ];
 
@@ -70,27 +70,28 @@ class CommentListWidget extends \yii\base\Widget
 
         $this->processDelete();
 
-        /** @var Comments\models\Comment $CommentModel */
-        $CommentModel = \Yii::createObject(Comments\Module::instance()->model('comment'));
-        $CommentsQuery = $CommentModel::find()
+        /** @var comments\models\Comment $commentModel */
+        $commentModel = \Yii::createObject(comments\Module::instance()->model('comment'));
+        /** @var comments\models\queries\CommentQuery $commentsQuery */
+        $commentsQuery = $commentModel::find()
             ->byEntity($this->entity);
 
         if (false === $this->showDeleted) {
-            $CommentsQuery->withoutDeleted();
+            $commentsQuery->withoutDeleted();
         }
 
-        $CommentsDataProvider = new \yii\data\ActiveDataProvider([
-            'query' => $CommentsQuery->with(['author', 'lastUpdateAuthor']),
+        $dataProvider = new ActiveDataProvider([
+            'query'      => $commentsQuery->with(['author', 'lastUpdateAuthor']),
             'pagination' => $this->pagination,
-            'sort' => $this->sort,
+            'sort'       => $this->sort,
         ]);
 
         $params = $this->viewParams;
-        $params['CommentsDataProvider'] = $CommentsDataProvider;
+        $params['dataProvider'] = $dataProvider;
 
         $content = $this->render('comment-list', $params);
 
-        return \yii\helpers\Html::tag('div', $content, $this->options);
+        return Html::tag('div', $content, $this->options);
     }
 
     private function processDelete()
@@ -98,28 +99,28 @@ class CommentListWidget extends \yii\base\Widget
         $delete = (int)\Yii::$app->getRequest()->get('delete-comment');
         if ($delete > 0) {
 
-            /** @var Comments\models\Comment $CommentModel */
-            $CommentModel = \Yii::createObject(Comments\Module::instance()->model('comment'));
+            /** @var comments\models\Comment $model */
+            $model = \Yii::createObject(Comments\Module::instance()->model('comment'));
 
-            /** @var Comments\models\Comment $Comment */
-            $Comment = $CommentModel::find()
+            /** @var comments\models\Comment $comment */
+            $comment = $model::find()
                 ->byId($delete)
                 ->one();
 
-            if ($Comment->isDeleted()) {
+            if ($comment->isDeleted()) {
                 return;
             }
 
-            if (!($Comment instanceof Comments\models\Comment)) {
-                throw new \yii\web\NotFoundHttpException(\Yii::t('app', 'Comment not found.'));
+            if (!($comment instanceof comments\models\Comment)) {
+                throw new NotFoundHttpException(\Yii::t('app', 'Comment not found.'));
             }
 
-            if (!$Comment->canDelete()) {
-                throw new \yii\web\ForbiddenHttpException(\Yii::t('app', 'Access Denied.'));
+            if (!$comment->canDelete()) {
+                throw new ForbiddenHttpException(\Yii::t('app', 'Access Denied.'));
             }
 
-            $Comment->deleted = $CommentModel::DELETED;
-            $Comment->update();
+            $comment->deleted = $model::DELETED;
+            $comment->update();
         }
     }
 

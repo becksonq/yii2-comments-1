@@ -1,19 +1,13 @@
 <?php
-/**
- * CommentatorInterface.php
- * @author Revin Roman
- * @link https://rmrevin.ru
- */
 
-namespace rmrevin\yii\module\Comments\interfaces;
+namespace beckson\yii\module\comments\interfaces;
 
 /**
  * Interface CommentatorInterface
- * @package rmrevin\yii\module\Comments\interfaces
+ * @package beckson\yii\module\comments\interfaces
  */
 interface CommentatorInterface
 {
-
     /**
      * @return string|false
      */

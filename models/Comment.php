@@ -1,17 +1,12 @@
 <?php
-/**
- * Comment.php
- * @author Revin Roman
- * @link https://rmrevin.ru
- */
 
-namespace rmrevin\yii\module\Comments\models;
+namespace beckson\yii\module\comments\models;
 
-use rmrevin\yii\module\Comments;
+use beckson\yii\module\comments;
 
 /**
  * Class Comment
- * @package rmrevin\yii\module\Comments\models
+ * @package beckson\yii\module\comments\models
  *
  * @property integer $id
  * @property string $entity
@@ -31,6 +26,8 @@ use rmrevin\yii\module\Comments;
  */
 class Comment extends \yii\db\ActiveRecord
 {
+    const NOT_DELETED   = 0;
+    const DELETED       = 1;
 
     /**
      * @inheritdoc
@@ -63,10 +60,10 @@ class Comment extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => \Yii::t('app', 'ID'),
-            'entity' => \Yii::t('app', 'Entity'),
-            'from' => \Yii::t('app', 'Comment author'),
-            'text' => \Yii::t('app', 'Text'),
+            'id'         => \Yii::t('app', 'ID'),
+            'entity'     => \Yii::t('app', 'Entity'),
+            'from'       => \Yii::t('app', 'Comment author'),
+            'text'       => \Yii::t('app', 'Text'),
             'created_by' => \Yii::t('app', 'Created by'),
             'updated_by' => \Yii::t('app', 'Updated by'),
             'created_at' => \Yii::t('app', 'Created at'),
@@ -95,8 +92,8 @@ class Comment extends \yii\db\ActiveRecord
      */
     public static function canCreate()
     {
-        return Comments\Module::instance()->useRbac === true
-            ? \Yii::$app->getUser()->can(Comments\Permission::CREATE)
+        return comments\Module::instance()->useRbac === true
+            ? \Yii::$app->getUser()->can(comments\Permission::CREATE)
             : true;
     }
 
@@ -105,11 +102,11 @@ class Comment extends \yii\db\ActiveRecord
      */
     public function canUpdate()
     {
-        $User = \Yii::$app->getUser();
+        $user = \Yii::$app->getUser();
 
-        return Comments\Module::instance()->useRbac === true
-            ? \Yii::$app->getUser()->can(Comments\Permission::UPDATE) || \Yii::$app->getUser()->can(Comments\Permission::UPDATE_OWN, ['Comment' => $this])
-            : $User->isGuest ? false : $this->created_by === $User->id;
+        return comments\Module::instance()->useRbac === true
+            ? \Yii::$app->getUser()->can(comments\Permission::UPDATE) || \Yii::$app->getUser()->can(comments\Permission::UPDATE_OWN, ['Comment' => $this])
+            : $user->isGuest ? false : $this->created_by === $user->id;
     }
 
     /**
@@ -117,11 +114,11 @@ class Comment extends \yii\db\ActiveRecord
      */
     public function canDelete()
     {
-        $User = \Yii::$app->getUser();
+        $user = \Yii::$app->getUser();
 
-        return Comments\Module::instance()->useRbac === true
-            ? \Yii::$app->getUser()->can(Comments\Permission::DELETE) || \Yii::$app->getUser()->can(Comments\Permission::DELETE_OWN, ['Comment' => $this])
-            : $User->isGuest ? false : $this->created_by === $User->id;
+        return comments\Module::instance()->useRbac === true
+            ? \Yii::$app->getUser()->can(comments\Permission::DELETE) || \Yii::$app->getUser()->can(comments\Permission::DELETE_OWN, ['Comment' => $this])
+            : $user->isGuest ? false : $this->created_by === $user->id;
     }
 
     /**
@@ -129,7 +126,7 @@ class Comment extends \yii\db\ActiveRecord
      */
     public function getAuthor()
     {
-        return $this->hasOne(Comments\Module::instance()->userIdentityClass, ['id' => 'created_by']);
+        return $this->hasOne(comments\Module::instance()->userIdentityClass, ['id' => 'created_by']);
     }
 
     /**
@@ -137,16 +134,17 @@ class Comment extends \yii\db\ActiveRecord
      */
     public function getLastUpdateAuthor()
     {
-        return $this->hasOne(Comments\Module::instance()->userIdentityClass, ['id' => 'updated_by']);
+        return $this->hasOne(comments\Module::instance()->userIdentityClass, ['id' => 'updated_by']);
     }
 
     /**
-     * @return queries\CommentQuery
+     * @return object|\yii\db\ActiveQuery
+     * @throws \yii\base\InvalidConfigException
      */
     public static function find()
     {
         return \Yii::createObject(
-            Comments\Module::instance()->model('commentQuery'),
+            comments\Module::instance()->model('commentQuery'),
             [get_called_class()]
         );
     }
@@ -158,7 +156,4 @@ class Comment extends \yii\db\ActiveRecord
     {
         return '{{%comment}}';
     }
-
-    const NOT_DELETED = 0;
-    const DELETED = 1;
 }

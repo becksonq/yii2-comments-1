@@ -1,17 +1,12 @@
 <?php
-/**
- * CommentQuery.php
- * @author Revin Roman
- * @link https://rmrevin.ru
- */
 
-namespace rmrevin\yii\module\Comments\models\queries;
+namespace beckson\yii\module\comments\models\queries;
 
-use rmrevin\yii\module\Comments;
+use beckson\yii\module\comments;
 
 /**
  * Class CommentQuery
- * @package rmrevin\yii\module\Comments\models\queries
+ * @package beckson\yii\module\comments\models\queries
  */
 class CommentQuery extends \yii\db\ActiveQuery
 {
@@ -39,14 +34,15 @@ class CommentQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * @return self
+     * @return $this
+     * @throws \yii\base\InvalidConfigException
      */
     public function withoutDeleted()
     {
-        /** @var Comments\models\Comment $CommentModel */
-        $CommentModel = \Yii::createObject(Comments\Module::instance()->model('comment'));
+        /** @var comments\models\Comment $commentModel */
+        $commentModel = \Yii::createObject(comments\Module::instance()->model('comment'));
 
-        $this->andWhere(['deleted' => $CommentModel::NOT_DELETED]);
+        $this->andWhere(['deleted' => $commentModel::NOT_DELETED]);
 
         return $this;
     }

@@ -1,17 +1,14 @@
 <?php
-/**
- * ItsMyComment.php
- * @author Revin Roman
- * @link https://rmrevin.ru
- */
 
-namespace rmrevin\yii\module\Comments\rbac;
+namespace beckson\yii\module\comments\rbac;
+
+use yii\rbac\Rule;
 
 /**
  * Class ItsMyComment
- * @package rmrevin\yii\module\Comments\rbac
+ * @package beckson\yii\module\comments\rbac
  */
-class ItsMyComment extends \yii\rbac\Rule
+class ItsMyComment extends Rule
 {
 
     public $name = 'comments.its-my-comment';

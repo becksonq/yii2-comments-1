@@ -1,18 +1,11 @@
 <?php
-/**
- * comment-form.php
- * @author Revin Roman
- * @link https://rmrevin.ru
- *
- * @var yii\web\View $this
- * @var Comments\forms\CommentCreateForm $CommentCreateForm
- */
 
-use rmrevin\yii\module\Comments;
+use beckson\yii\module\Comments;
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
-/** @var Comments\widgets\CommentFormWidget $Widget */
-$Widget = $this->context;
+/** @var \beckson\yii\module\comments\widgets\CommentFormWidget $widget */
+$widget = $this->context;
 
 ?>
 
@@ -21,20 +14,21 @@ $Widget = $this->context;
     <div class="col-xs-12 col-sm-9 col-md-6 col-lg-4">
         <?php
         /** @var \yii\widgets\ActiveForm $form */
-        $form = \yii\widgets\ActiveForm::begin();
+        $form = ActiveForm::begin();
 
-        echo Html::activeHiddenInput($CommentCreateForm, 'id');
+        /** @var $commentCreateForm */
+        echo Html::activeHiddenInput($commentCreateForm, 'id');
 
         if (\Yii::$app->getUser()->getIsGuest()) {
-            echo $form->field($CommentCreateForm, 'from')
+            echo $form->field($commentCreateForm, 'from')
                 ->textInput();
         }
 
         $options = [];
-        if ($Widget->Comment->isNewRecord) {
+        if ($widget->comment->isNewRecord) {
             $options['data-role'] = 'new-comment';
         }
-        echo $form->field($CommentCreateForm, 'text')
+        echo $form->field($commentCreateForm, 'text')
             ->textarea($options);
 
         ?>
@@ -48,8 +42,6 @@ $Widget = $this->context;
             ]);
             ?>
         </div>
-        <?php
-        \yii\widgets\ActiveForm::end();
-        ?>
+        <?php ActiveForm::end(); ?>
     </div>
 </div>

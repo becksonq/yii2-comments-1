@@ -1,20 +1,15 @@
 <?php
-/**
- * CommentListAsset.php
- * @author Revin Roman
- * @link https://rmrevin.ru
- */
 
-namespace rmrevin\yii\module\Comments\widgets;
+namespace beckson\yii\module\comments\widgets;
 
 /**
  * Class CommentListAsset
- * @package rmrevin\yii\module\Comments\widgets
+ * @package beckson\yii\module\comments\widgets
  */
 class CommentListAsset extends \yii\web\AssetBundle
 {
 
-    public $sourcePath = '@vendor/rmrevin/yii2-comments/widgets/_assets';
+    public $sourcePath = '@vendor/beckson/yii2-comments/widgets/_assets';
 
     public $css = [
         'comment-list.css',

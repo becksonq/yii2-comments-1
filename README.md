@@ -15,7 +15,7 @@ Code Status
 Installation
 ------------
 ```bash
-composer require "rmrevin/yii2-comments:1.4.*"
+composer require "beckson/yii2-comments:1.4.*"
 ```
 
 Configuration
@@ -29,7 +29,7 @@ return [
 	'modules' => [
 		// ...
 		'comments' => [
-		    'class' => 'rmrevin\yii\module\Comments\Module',
+		    'class' => 'beckson\yii\module\comments\Module',
 		    'userIdentityClass' => 'app\models\User',
 		    'useRbac' => true,
 		]
@@ -38,12 +38,12 @@ return [
 ];
 ```
 
-In your `User` model (or another model implements the interface `IdentityInterface`) need to implement the interface "\rmrevin\yii\module\Comments\interfaces\CommentatorInterface"
+In your `User` model (or another model implements the interface `IdentityInterface`) need to implement the interface "\beckson\yii\module\comments\interfaces\CommentatorInterface"
 ```php
 class User extends \yii\db\ActiveRecord
     implements
         \yii\web\IdentityInterface,
-        \rmrevin\yii\module\Comments\interfaces\CommentatorInterface
+        \beckson\yii\module\comments\interfaces\CommentatorInterface
 {
     // ...
     
@@ -69,8 +69,8 @@ class User extends \yii\db\ActiveRecord
 In auth manager add rules (if `Module::$useRbac = true`):
 ```php
 <?php
-use \rmrevin\yii\module\Comments\Permission;
-use \rmrevin\yii\module\Comments\rbac\ItsMyComment;
+use \beckson\yii\module\comments\Permission;
+use \beckson\yii\module\comments\rbac\ItsMyComment;
 
 $AuthManager = \Yii::$app->getAuthManager();
 $ItsMyCommentRule = new ItsMyComment();
@@ -103,12 +103,12 @@ $AuthManager->add(new \yii\rbac\Permission([
 
 Updating database schema
 ------------------------
-After you downloaded and configured `rmrevin/yii2-comments`,
+After you downloaded and configured `beckson/yii2-comments`,
 the last thing you need to do is updating your database schema by applying the migrations:
 
 In `command line`:
 ```
-php yii migrate/up --migrationPath=@vendor/rmrevin/yii2-comments/migrations/
+php yii migrate/up --migrationPath=@vendor/beckson/yii2-comments/migrations/
 ```
 
 Usage
@@ -118,9 +118,9 @@ In view
 <?php
 // ...
 
-use rmrevin\yii\module\Comments;
+use beckson\yii\module\comments;
 
-echo Comments\widgets\CommentListWidget::widget([
+echo comments\widgets\CommentListWidget::widget([
     'entity' => (string) 'photo-15', // type and id
 ]);
 
@@ -186,7 +186,7 @@ Depending on which ones you need, you can set the `modelMap` config property:
 	'modules' => [
 		// ...
 		'comments' => [
-		    'class' => 'rmrevin\yii\module\Comments\Module',
+		    'class' => 'beckson\yii\module\comments\Module',
 		    'userIdentityClass' => 'app\models\User',
 		    'useRbac' => true,
 		    'modelMap' => [
@@ -239,7 +239,7 @@ You can extend the view files supplied by this package using the `theme` compone
     'view' => [
         'theme' => [
             'pathMap' => [
-                '@vendor/rmrevin/yii2-comments/widgets/views' => '@app/views/comments', // example: @app/views/comment/comment-form.php
+                '@vendor/beckson/yii2-comments/widgets/views' => '@app/views/comments', // example: @app/views/comment/comment-form.php
             ],
         ],
     ],
