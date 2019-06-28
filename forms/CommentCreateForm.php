@@ -1,17 +1,13 @@
 <?php
-/**
- * CommentCreateForm.php
- * @author Revin Roman
- * @link https://rmrevin.ru
- */
 
-namespace rmrevin\yii\module\Comments\forms;
+namespace beckson\yii\module\comments\forms;
 
-use rmrevin\yii\module\Comments;
+use beckson\yii\module\comments;
+use beckson\yii\module\comments\Module;
 
 /**
  * Class CommentCreateForm
- * @package rmrevin\yii\module\Comments\forms
+ * @package beckson\yii\module\comments\forms
  */
 class CommentCreateForm extends \yii\base\Model
 {
@@ -21,39 +17,40 @@ class CommentCreateForm extends \yii\base\Model
     public $from;
     public $text;
 
-    /** @var Comments\models\Comment */
-    public $Comment;
+    /** @var comments\models\Comment */
+    public $comment;
 
     public function init()
     {
-        $Comment = $this->Comment;
+        $comment = $this->comment;
 
         if (false === $this->Comment->isNewRecord) {
-            $this->id = $Comment->id;
-            $this->entity = $Comment->entity;
-            $this->from = $Comment->from;
-            $this->text = $Comment->text;
+            $this->id = $comment->id;
+            $this->entity = $comment->entity;
+            $this->from = $comment->from;
+            $this->text = $comment->text;
         } elseif (!\Yii::$app->getUser()->getIsGuest()) {
-            $User = \Yii::$app->getUser()->getIdentity();
+            $user = \Yii::$app->getUser()->getIdentity();
 
-            $this->from = $User instanceof Comments\interfaces\CommentatorInterface
-                ? $User->getCommentatorName()
+            $this->from = $user instanceof comments\interfaces\CommentatorInterface
+                ? $user->getCommentatorName()
                 : null;
         }
     }
 
     /**
-     * @inheritdoc
+     * @return array
      */
     public function rules()
     {
-        $CommentModelClassName = Comments\Module::instance()->model('comment');
+        /** @var  $commentModelClassName */
+        $commentModelClassName = Module::instance()->model('comment');
 
         return [
             [['entity', 'text'], 'required'],
             [['entity', 'from', 'text'], 'string'],
             [['id'], 'integer'],
-            [['id'], 'exist', 'targetClass' => $CommentModelClassName, 'targetAttribute' => 'id'],
+            [['id'], 'exist', 'targetClass' => $commentModelClassName, 'targetAttribute' => 'id'],
         ];
     }
 
@@ -71,43 +68,44 @@ class CommentCreateForm extends \yii\base\Model
 
     /**
      * @return bool
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\NotFoundHttpException
      */
     public function save()
     {
-        $Comment = $this->Comment;
+        $comment = $this->comment;
 
-        $CommentModelClassName = Comments\Module::instance()->model('comment');
+        $commentModelClassName = comments\Module::instance()->model('comment');
 
         if (empty($this->id)) {
-            $Comment = \Yii::createObject($CommentModelClassName);
-        } elseif ($this->id > 0 && $Comment->id !== $this->id) {
+            $comment = \Yii::createObject($commentModelClassName);
+        } elseif ($this->id > 0 && $comment->id !== $this->id) {
             /** @var Comments\models\Comment $CommentModel */
-            $CommentModel = \Yii::createObject($CommentModelClassName);
-            $Comment = $CommentModel::find()
+            $commentModel = \Yii::createObject($commentModelClassName);
+            $comment = $commentModel::find()
                 ->byId($this->id)
                 ->one();
 
-            if (!($Comment instanceof Comments\models\Comment)) {
+            if (!($comment instanceof comments\models\Comment)) {
                 throw new \yii\web\NotFoundHttpException;
             }
         }
 
-        $Comment->entity = $this->entity;
-        $Comment->from = $this->from;
-        $Comment->text = $this->text;
+        $comment->entity = $this->entity;
+        $comment->from = $this->from;
+        $comment->text = $this->text;
 
-        $result = $Comment->save();
+        $result = $comment->save();
 
-        if ($Comment->hasErrors()) {
-            foreach ($Comment->getErrors() as $attribute => $messages) {
+        if ($comment->hasErrors()) {
+            foreach ($comment->getErrors() as $attribute => $messages) {
                 foreach ($messages as $mes) {
                     $this->addError($attribute, $mes);
                 }
             }
         }
 
-        $this->Comment = $Comment;
+        $this->comment = $comment;
 
         return $result;
     }

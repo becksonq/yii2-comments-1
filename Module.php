@@ -1,26 +1,22 @@
 <?php
-/**
- * Module.php
- * @author Revin Roman
- * @link https://rmrevin.ru
- */
 
 namespace beckson\yii\module\comments;
 
-use rmrevin\yii\module\Comments\forms\CommentCreateForm;
-use rmrevin\yii\module\Comments\models\Comment;
-use rmrevin\yii\module\Comments\models\queries\CommentQuery;
+use beckson\yii\module\comments\forms\CommentCreateForm;
+use beckson\yii\module\comments\models\Comment;
+use beckson\yii\module\comments\models\queries\CommentQuery;
 use yii\helpers\ArrayHelper;
+use yii\base\Module as BaseModule;
 
 /**
- * Class Module
- * @package rmrevin\yii\module\Comments
+ * Class Comments
+ * @package beckson\yii\module
  */
-class Module extends \yii\base\Module
+class Module extends BaseModule
 {
 
     /** @var string module name */
-    public static $moduleName = 'comments';
+    public static $moduleId = 'comments';
 
     /** @var string|null */
     public $userIdentityClass = null;
@@ -60,7 +56,7 @@ class Module extends \yii\base\Module
      */
     public static function instance()
     {
-        return \Yii::$app->getModule(static::$moduleName);
+        return \Yii::$app->getModule(static::$moduleId);
     }
 
     /**
@@ -94,7 +90,7 @@ class Module extends \yii\base\Module
     /**
      * Get defined className of model
      *
-     * Returns an string or array compatible
+     * Returns string or array compatible
      * with the Yii::createObject method.
      *
      * @param string $name
