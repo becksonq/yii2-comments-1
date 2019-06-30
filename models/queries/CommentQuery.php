@@ -1,12 +1,12 @@
 <?php
 
-namespace beckson\yii\module\comments\models\queries;
+namespace beckson\comments\models\queries;
 
-use beckson\yii\module\comments;
+use beckson\comments;
 
 /**
  * Class CommentQuery
- * @package beckson\yii\module\comments\models\queries
+ * @package beckson\comments\models\queries
  */
 class CommentQuery extends \yii\db\ActiveQuery
 {

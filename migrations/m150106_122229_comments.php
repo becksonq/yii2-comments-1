@@ -1,7 +1,5 @@
 <?php
 
-use yii\db\Schema;
-
 class m150106_122229_comments extends \yii\db\Migration
 {
 
@@ -14,14 +12,14 @@ class m150106_122229_comments extends \yii\db\Migration
         }
 
         $this->createTable('{{%comment}}', [
-            'id' => Schema::TYPE_PK,
-            'entity' => Schema::TYPE_STRING,
-            'text' => Schema::TYPE_TEXT,
-            'deleted' => Schema::TYPE_BOOLEAN . ' NOT NULL DEFAULT 0',
-            'created_by' => Schema::TYPE_INTEGER,
-            'updated_by' => Schema::TYPE_INTEGER,
-            'created_at' => Schema::TYPE_INTEGER,
-            'updated_at' => Schema::TYPE_INTEGER,
+            'id'         => $this->primaryKey(),
+            'entity'     => $this->string(),
+            'text'       => $this->text(),
+            'deleted'    => $this->boolean()->notNull()->defaultValue(0),
+            'created_by' => $this->integer(),
+            'updated_by' => $this->integer(),
+            'created_at' => $this->integer(),
+            'updated_at' => $this->integer(),
         ], $tableOptions);
 
         $this->createIndex('index_entity', '{{%comment}}', ['entity']);

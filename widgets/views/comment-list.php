@@ -1,12 +1,14 @@
 <?php
 
 use rmrevin\yii\fontawesome\FA;
-use beckson\yii\module\Comments;
 use yii\helpers\Html;
 use yii\helpers\Json;
-use beckson\yii\module\comments\interfaces\CommentatorInterface;
+use beckson\comments\interfaces\CommentatorInterface;
+use beckson\comments\models\Comment;
+use beckson\comments\Module;
+use beckson\comments\widgets\CommentFormWidget;
 
-/** @var \beckson\yii\module\comments\widgets\CommentListWidget $commentListWidget */
+/** @var \beckson\comments\widgets\CommentListWidget $commentListWidget */
 $commentListWidget = $this->context;
 
 $comments = [];
@@ -19,7 +21,7 @@ echo yii\widgets\ListView::widget([
     'options'      => ['class' => 'comments-list'],
     'layout'       => "{items}\n{pager}",
     'itemView'     =>
-        function (comments\models\Comment $comment, $index, yii\widgets\ListView $widget)
+        function (Comment $comment, $index, yii\widgets\ListView $widget)
         use (&$comments, $commentListWidget) {
             ob_start();
 
@@ -117,7 +119,7 @@ echo yii\widgets\ListView::widget([
                         ?>
                         <div class="edit">
                             <?php
-                            echo Comments\widgets\CommentFormWidget::widget([
+                            echo CommentFormWidget::widget([
                                 'entity'  => $commentListWidget->entity,
                                 'Comment' => $comment,
                                 'anchor'  => $commentListWidget->anchorAfterUpdate,
@@ -166,13 +168,13 @@ echo yii\widgets\ListView::widget([
         }
 ]);
 
-/** @var \beckson\yii\module\comments\models\Comment $commentModel */
-$commentModel = \Yii::createObject(Comments\Module::instance()->model('comment'));
+/** @var \beckson\comments\models\Comment $commentModel */
+$commentModel = \Yii::createObject(Module::instance()->model('comment'));
 
 if ($commentListWidget->showCreateForm && $commentModel::canCreate()) {
     echo Html::tag('h3', Yii::t('app', 'Add comment'), ['class' => 'comment-title']);
 
-    echo Comments\widgets\CommentFormWidget::widget([
+    echo CommentFormWidget::widget([
         'theme'   => $commentListWidget->theme,
         'entity'  => $commentListWidget->entity,
         'Comment' => $commentModel,

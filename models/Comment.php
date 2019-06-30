@@ -1,12 +1,14 @@
 <?php
 
-namespace beckson\yii\module\comments\models;
+namespace beckson\comments\models;
 
-use beckson\yii\module\comments;
+//use beckson\comments;
+use beckson\comments\Permission;
+use beckson\comments\Module;
 
 /**
  * Class Comment
- * @package beckson\yii\module\comments\models
+ * @package beckson\comments\models
  *
  * @property integer $id
  * @property string $entity
@@ -26,8 +28,8 @@ use beckson\yii\module\comments;
  */
 class Comment extends \yii\db\ActiveRecord
 {
-    const NOT_DELETED   = 0;
-    const DELETED       = 1;
+    const NOT_DELETED = 0;
+    const DELETED = 1;
 
     /**
      * @inheritdoc
@@ -38,6 +40,14 @@ class Comment extends \yii\db\ActiveRecord
             \yii\behaviors\BlameableBehavior::className(),
             \yii\behaviors\TimestampBehavior::className(),
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return '{{%comment}}';
     }
 
     /**
@@ -92,8 +102,8 @@ class Comment extends \yii\db\ActiveRecord
      */
     public static function canCreate()
     {
-        return comments\Module::instance()->useRbac === true
-            ? \Yii::$app->getUser()->can(comments\Permission::CREATE)
+        return Module::instance()->useRbac === true
+            ? \Yii::$app->getUser()->can(Permission::CREATE)
             : true;
     }
 
@@ -104,8 +114,9 @@ class Comment extends \yii\db\ActiveRecord
     {
         $user = \Yii::$app->getUser();
 
-        return comments\Module::instance()->useRbac === true
-            ? \Yii::$app->getUser()->can(comments\Permission::UPDATE) || \Yii::$app->getUser()->can(comments\Permission::UPDATE_OWN, ['Comment' => $this])
+        return Module::instance()->useRbac === true
+            ? \Yii::$app->getUser()->can(Permission::UPDATE) || \Yii::$app->getUser()->can(Permission::UPDATE_OWN,
+                ['Comment' => $this])
             : $user->isGuest ? false : $this->created_by === $user->id;
     }
 
@@ -116,8 +127,9 @@ class Comment extends \yii\db\ActiveRecord
     {
         $user = \Yii::$app->getUser();
 
-        return comments\Module::instance()->useRbac === true
-            ? \Yii::$app->getUser()->can(comments\Permission::DELETE) || \Yii::$app->getUser()->can(comments\Permission::DELETE_OWN, ['Comment' => $this])
+        return Module::instance()->useRbac === true
+            ? \Yii::$app->getUser()->can(Permission::DELETE) || \Yii::$app->getUser()->can(Permission::DELETE_OWN,
+                ['Comment' => $this])
             : $user->isGuest ? false : $this->created_by === $user->id;
     }
 
@@ -126,7 +138,7 @@ class Comment extends \yii\db\ActiveRecord
      */
     public function getAuthor()
     {
-        return $this->hasOne(comments\Module::instance()->userIdentityClass, ['id' => 'created_by']);
+        return $this->hasOne(Module::instance()->userIdentityClass, ['id' => 'created_by']);
     }
 
     /**
@@ -134,7 +146,7 @@ class Comment extends \yii\db\ActiveRecord
      */
     public function getLastUpdateAuthor()
     {
-        return $this->hasOne(comments\Module::instance()->userIdentityClass, ['id' => 'updated_by']);
+        return $this->hasOne(Module::instance()->userIdentityClass, ['id' => 'updated_by']);
     }
 
     /**
@@ -144,16 +156,8 @@ class Comment extends \yii\db\ActiveRecord
     public static function find()
     {
         return \Yii::createObject(
-            comments\Module::instance()->model('commentQuery'),
+            Module::instance()->model('commentQuery'),
             [get_called_class()]
         );
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return '{{%comment}}';
     }
 }

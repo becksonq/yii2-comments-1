@@ -1,14 +1,13 @@
 <?php
 
-namespace beckson\yii\module\comments;
+namespace beckson\comments;
 
 /**
  * Class Permission
- * @package beckson\yii\module\comments
+ * @package beckson\comments
  */
 class Permission
 {
-
     const CREATE        = 'comments.create';
     const UPDATE        = 'comments.update';
     const UPDATE_OWN    = 'comments.update.own';

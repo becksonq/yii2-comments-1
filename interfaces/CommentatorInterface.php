@@ -1,10 +1,10 @@
 <?php
 
-namespace beckson\yii\module\comments\interfaces;
+namespace beckson\comments\interfaces;
 
 /**
  * Interface CommentatorInterface
- * @package beckson\yii\module\comments\interfaces
+ * @package beckson\comments\interfaces
  */
 interface CommentatorInterface
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace beckson\yii\module\comments\rbac;
+namespace beckson\comments\rbac;
 
 use yii\rbac\Rule;
 
 /**
  * Class ItsMyComment
- * @package beckson\yii\module\comments\rbac
+ * @package beckson\comments\rbac
  */
 class ItsMyComment extends Rule
 {

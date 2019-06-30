@@ -1,6 +1,6 @@
 <?php
 
-namespace beckson\yii\module\comments;
+namespace beckson\comments;
 
 use beckson\yii\module\comments\forms\CommentCreateForm;
 use beckson\yii\module\comments\models\Comment;

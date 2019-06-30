@@ -1,11 +1,13 @@
 <?php
 
-use beckson\yii\module\Comments;
+use beckson\comments;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-/** @var \beckson\yii\module\comments\widgets\CommentFormWidget $widget */
+/** @var \beckson\comments\widgets\CommentFormWidget $widget */
 $widget = $this->context;
+
+/** @var \yii\widgets\ActiveForm $form */
 
 ?>
 
@@ -13,7 +15,6 @@ $widget = $this->context;
 <div class="row comment-form">
     <div class="col-xs-12 col-sm-9 col-md-6 col-lg-4">
         <?php
-        /** @var \yii\widgets\ActiveForm $form */
         $form = ActiveForm::begin();
 
         /** @var $commentCreateForm */

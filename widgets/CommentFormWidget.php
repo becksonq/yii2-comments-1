@@ -1,14 +1,14 @@
 <?php
 
-namespace beckson\yii\module\comments\widgets;
+namespace beckson\comments\widgets;
 
-use beckson\yii\module\Comments;
-use beckson\yii\module\comments\models\Comment;
-use rmrevin\yii\module\Comments\forms\CommentCreateForm;
+use beckson\comments\models\Comment;
+use beckson\comments\forms\CommentCreateForm;
+use beckson\comments\Module;
 
 /**
  * Class CommentFormWidget
- * @package beckson\yii\module\comments\widgets
+ * @package beckson\comments\widgets
  */
 class CommentFormWidget extends \yii\base\Widget
 {
@@ -33,7 +33,7 @@ class CommentFormWidget extends \yii\base\Widget
         CommentFormAsset::register($this->getView());
 
         /** @var CommentCreateForm $CommentCreateForm */
-        $commentCreateFormClassData = comments\Module::instance()->model(
+        $commentCreateFormClassData = Module::instance()->model(
             'commentCreateForm', [
                 'Comment' => $this->comment,
                 'entity' => $this->entity

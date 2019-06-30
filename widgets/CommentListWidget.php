@@ -1,13 +1,15 @@
 <?php
 
-namespace beckson\yii\module\comments\widgets;
+namespace beckson\comments\widgets;
 
-use beckson\yii\module\comments;
+use beckson\comments\models\Comment;
+use beckson\comments\models\queries\CommentQuery;
 use yii\base\Widget;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
+use beckson\comments\Module;
 
 /**
  * Class CommentListWidget
@@ -70,9 +72,9 @@ class CommentListWidget extends Widget
 
         $this->processDelete();
 
-        /** @var comments\models\Comment $commentModel */
-        $commentModel = \Yii::createObject(comments\Module::instance()->model('comment'));
-        /** @var comments\models\queries\CommentQuery $commentsQuery */
+        /** @var Comment $commentModel */
+        $commentModel = \Yii::createObject(Module::instance()->model('comment'));
+        /** @var CommentQuery $commentsQuery */
         $commentsQuery = $commentModel::find()
             ->byEntity($this->entity);
 
@@ -99,10 +101,10 @@ class CommentListWidget extends Widget
         $delete = (int)\Yii::$app->getRequest()->get('delete-comment');
         if ($delete > 0) {
 
-            /** @var comments\models\Comment $model */
-            $model = \Yii::createObject(Comments\Module::instance()->model('comment'));
+            /** @var Comment $model */
+            $model = \Yii::createObject(Module::instance()->model('comment'));
 
-            /** @var comments\models\Comment $comment */
+            /** @var Comment $comment */
             $comment = $model::find()
                 ->byId($delete)
                 ->one();
@@ -111,7 +113,7 @@ class CommentListWidget extends Widget
                 return;
             }
 
-            if (!($comment instanceof comments\models\Comment)) {
+            if (!($comment instanceof Comment)) {
                 throw new NotFoundHttpException(\Yii::t('app', 'Comment not found.'));
             }
 

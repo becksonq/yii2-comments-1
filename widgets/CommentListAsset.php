@@ -1,14 +1,13 @@
 <?php
 
-namespace beckson\yii\module\comments\widgets;
+namespace beckson\comments\widgets;
 
 /**
  * Class CommentListAsset
- * @package beckson\yii\module\comments\widgets
+ * @package beckson\comments\widgets
  */
 class CommentListAsset extends \yii\web\AssetBundle
 {
-
     public $sourcePath = '@vendor/beckson/yii2-comments/widgets/_assets';
 
     public $css = [

@@ -1,15 +1,16 @@
 <?php
 
-namespace beckson\yii\module\comments\forms;
+namespace beckson\comments\forms;
 
-use beckson\yii\module\comments;
-use beckson\yii\module\comments\Module;
+use beckson\comments;
+use beckson\comments\Module;
+use yii\base\Model as BaseModel;
 
 /**
  * Class CommentCreateForm
- * @package beckson\yii\module\comments\forms
+ * @package beckson\comments\forms
  */
-class CommentCreateForm extends \yii\base\Model
+class CommentCreateForm extends BaseModel
 {
 
     public $id;
@@ -61,8 +62,8 @@ class CommentCreateForm extends \yii\base\Model
     {
         return [
             'entity' => \Yii::t('app', 'Entity'),
-            'from' => \Yii::t('app', 'Your name'),
-            'text' => \Yii::t('app', 'Text'),
+            'from'   => \Yii::t('app', 'Your name'),
+            'text'   => \Yii::t('app', 'Text'),
         ];
     }
 
