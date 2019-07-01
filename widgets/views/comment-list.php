@@ -1,12 +1,13 @@
 <?php
 
-use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use beckson\comments\interfaces\CommentatorInterface;
 use beckson\comments\models\Comment;
 use beckson\comments\Module;
 use beckson\comments\widgets\CommentFormWidget;
+use kartik\icons\Icon;
+use yii\widgets\ListView;
 
 /** @var \beckson\comments\widgets\CommentListWidget $commentListWidget */
 $commentListWidget = $this->context;
@@ -15,13 +16,14 @@ $comments = [];
 
 echo Html::tag('h3', Yii::t('app', 'Comments'), ['class' => 'comment-title']);
 
-echo yii\widgets\ListView::widget([
-    /** @var $dataProvider */
+/** @var $dataProvider \yii\data\ActiveDataProvider */
+echo ListView::widget([
+
     'dataProvider' => $dataProvider,
     'options'      => ['class' => 'comments-list'],
     'layout'       => "{items}\n{pager}",
     'itemView'     =>
-        function (Comment $comment, $index, yii\widgets\ListView $widget)
+        function (Comment $comment, $index, $key, ListView $widget)
         use (&$comments, $commentListWidget) {
             ob_start();
 
@@ -69,7 +71,7 @@ echo yii\widgets\ListView::widget([
                         $name_html = Html::tag('strong', $name);
 
                         if (false === $avatar) {
-                            $avatar_html = Html::tag('div', FA::icon('male'), [
+                            $avatar_html = Html::tag('div', Icon::show('user', ['framework' => Icon::FAR]), [
                                 'class' => 'avatar fake',
                                 'title' => Yii::t('app', 'Unknown author'),
                             ]);
@@ -121,7 +123,7 @@ echo yii\widgets\ListView::widget([
                             <?php
                             echo CommentFormWidget::widget([
                                 'entity'  => $commentListWidget->entity,
-                                'Comment' => $comment,
+                                'comment' => $comment,
                                 'anchor'  => $commentListWidget->anchorAfterUpdate,
                             ]);
                             ?>
@@ -133,7 +135,7 @@ echo yii\widgets\ListView::widget([
                         <?php
                         if (!$comment->isDeleted()) {
                             if ($comment->canCreate()) {
-                                echo Html::a(FA::icon('reply') . ' ' . Yii::t('app', 'Reply'), '#', [
+                                echo Html::a(Icon::show('reply', ['framework' => Icon::FAS]) . ' ' . Yii::t('app', 'Reply'), '#', [
                                     'class'     => 'btn btn-info btn-xs',
                                     'data-role' => 'reply',
                                 ]);
@@ -141,7 +143,7 @@ echo yii\widgets\ListView::widget([
 
                             if ($comment->canUpdate()) {
                                 echo Html::a(
-                                    FA::icon('pencil') . ' ' . Yii::t('app', 'Edit'),
+                                    Icon::show('pencil-alt', ['framework' => Icon::FAS]) . ' ' . Yii::t('app', 'Edit'),
                                     '#',
                                     [
                                         'data-role' => 'edit',
@@ -152,7 +154,7 @@ echo yii\widgets\ListView::widget([
 
                             if ($comment->canDelete()) {
                                 echo Html::a(
-                                    FA::icon('times') . ' ' . Yii::t('app', 'Delete'),
+                                    Icon::show('times-circle', ['framework' => Icon::FAR]) . ' ' . Yii::t('app', 'Delete'),
                                     ['', 'delete-comment' => $comment->id],
                                     ['class' => 'btn btn-danger btn-xs']
                                 );
@@ -177,7 +179,7 @@ if ($commentListWidget->showCreateForm && $commentModel::canCreate()) {
     echo CommentFormWidget::widget([
         'theme'   => $commentListWidget->theme,
         'entity'  => $commentListWidget->entity,
-        'Comment' => $commentModel,
+        'comment' => $commentModel,
         'anchor'  => $commentListWidget->anchorAfterUpdate,
     ]);
 }

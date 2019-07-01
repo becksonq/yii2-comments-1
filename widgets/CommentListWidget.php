@@ -13,7 +13,7 @@ use beckson\comments\Module;
 
 /**
  * Class CommentListWidget
- * @package beckson\yii\module\comments\widgets
+ * @package beckson\comments\widgets
  */
 class CommentListWidget extends Widget
 {

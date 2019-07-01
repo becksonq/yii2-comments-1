@@ -2,9 +2,9 @@
 
 namespace beckson\comments;
 
-use beckson\yii\module\comments\forms\CommentCreateForm;
-use beckson\yii\module\comments\models\Comment;
-use beckson\yii\module\comments\models\queries\CommentQuery;
+use beckson\comments\forms\CommentCreateForm;
+use beckson\comments\models\Comment;
+use beckson\comments\models\queries\CommentQuery;
 use yii\helpers\ArrayHelper;
 use yii\base\Module as BaseModule;
 

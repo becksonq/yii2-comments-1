@@ -5,6 +5,7 @@ namespace beckson\comments\forms;
 use beckson\comments;
 use beckson\comments\Module;
 use yii\base\Model as BaseModel;
+use beckson\comments\models\Comment;
 
 /**
  * Class CommentCreateForm
@@ -25,7 +26,7 @@ class CommentCreateForm extends BaseModel
     {
         $comment = $this->comment;
 
-        if (false === $this->Comment->isNewRecord) {
+        if (false === $this->comment->isNewRecord) {
             $this->id = $comment->id;
             $this->entity = $comment->entity;
             $this->from = $comment->from;
@@ -87,7 +88,7 @@ class CommentCreateForm extends BaseModel
                 ->byId($this->id)
                 ->one();
 
-            if (!($comment instanceof comments\models\Comment)) {
+            if (!($comment instanceof Comment)) {
                 throw new \yii\web\NotFoundHttpException;
             }
         }

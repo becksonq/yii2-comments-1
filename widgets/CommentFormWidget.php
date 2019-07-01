@@ -35,7 +35,7 @@ class CommentFormWidget extends \yii\base\Widget
         /** @var CommentCreateForm $CommentCreateForm */
         $commentCreateFormClassData = Module::instance()->model(
             'commentCreateForm', [
-                'Comment' => $this->comment,
+                'comment' => $this->comment,
                 'entity' => $this->entity
             ]
         );
@@ -46,7 +46,7 @@ class CommentFormWidget extends \yii\base\Widget
             if ($commentCreateForm->validate()) {
                 if ($commentCreateForm->save()) {
                     \Yii::$app->getResponse()
-                        ->refresh(sprintf($this->anchor, $commentCreateForm->Comment->id))
+                        ->refresh(sprintf($this->anchor, $commentCreateForm->comment->id))
                         ->send();
 
                     exit;
