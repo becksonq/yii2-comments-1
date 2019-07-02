@@ -2,48 +2,79 @@
 
 namespace beckson\comments\models\queries;
 
-use beckson\comments;
+use beckson\comments\models\Comment;
+use beckson\comments\Module;
+use yii\data\ActiveDataProvider;
+use yii\db\ActiveQuery;
 
 /**
  * Class CommentQuery
  * @package beckson\comments\models\queries
  */
-class CommentQuery extends \yii\db\ActiveQuery
+class CommentQuery extends Comment
 {
-
     /**
-     * @param integer|array $id
-     * @return self
+     * @param $id
+     * @param ActiveQuery $query
+     * @return mixed
      */
-    public function byId($id)
+    public function byId($id, ActiveQuery $query)
     {
-        $this->andWhere(['id' => $id]);
-
-        return $this;
+        return $query->andWhere(['id' => $id]);
     }
 
     /**
-     * @param string|array $entity
-     * @return self
+     * @param $entity
+     * @param ActiveQuery $query
+     * @return ActiveQuery
      */
-    public function byEntity($entity)
+    public function byEntity($entity, ActiveQuery $query)
     {
-        $this->andWhere(['entity' => $entity]);
-
-        return $this;
+        return $query->andWhere(['entity' => $entity]);
     }
 
     /**
-     * @return $this
+     * @param ActiveQuery $query
+     * @return ActiveQuery
      * @throws \yii\base\InvalidConfigException
      */
-    public function withoutDeleted()
+    public function withoutDeleted(ActiveQuery $query)
     {
-        /** @var comments\models\Comment $commentModel */
-        $commentModel = \Yii::createObject(comments\Module::instance()->model('comment'));
+        /** @var Comment $commentModel */
+        $commentModel = \Yii::createObject(Module::instance()->model('comment'));
 
-        $this->andWhere(['deleted' => $commentModel::NOT_DELETED]);
+        return $query->andWhere(['deleted' => $commentModel::NOT_DELETED]);
+    }
 
-        return $this;
+    public function search($params)
+    {
+        $query = Comment::find();
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'sort'  => [
+                'defaultOrder' => ['id' => SORT_DESC,],
+            ]
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'id'         => $this->id,
+            'created_by' => $this->created_by,
+            'updated_by' => $this->updated_by,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ]);
+
+        $query->andFilterWhere(['like', 'entity', $this->entity])
+            ->andFilterWhere(['like', 'from', $this->from])
+            ->andFilterWhere(['like', 'text', $this->text]);
+
+        return $dataProvider;
     }
 }

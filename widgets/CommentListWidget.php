@@ -44,7 +44,7 @@ class CommentListWidget extends Widget
     /** @var array */
     public $sort = [
         'defaultOrder' => [
-            'id' => SORT_ASC,
+            'id' => SORT_DESC,
         ],
     ];
 

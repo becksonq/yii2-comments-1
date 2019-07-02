@@ -9,6 +9,8 @@ use beckson\comments\widgets\CommentFormWidget;
 use kartik\icons\Icon;
 use yii\widgets\ListView;
 
+Icon::map($this);
+
 /** @var \beckson\comments\widgets\CommentListWidget $commentListWidget */
 $commentListWidget = $this->context;
 
@@ -102,7 +104,7 @@ echo ListView::widget([
                     <div class="text">
                         <?php
                         if ($comment->isDeleted()) {
-                            echo Yii::t('app', 'Comment was deleted.');
+                            echo Yii::t('app', 'Comment was deleted');
                         } else {
                             echo yii\helpers\Markdown::process($comment->text, 'gfm-comment');
 

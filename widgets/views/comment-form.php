@@ -8,31 +8,32 @@ use yii\widgets\ActiveForm;
 $widget = $this->context;
 
 /** @var \yii\widgets\ActiveForm $form */
-
+/** @var $commentCreateForm */
 ?>
 
 <a name="commentcreateform"></a>
 <div class="row comment-form">
-    <div class="col-xs-12 col-sm-9 col-md-6 col-lg-4">
+    <div class="col-xs-12 col-sm-9 col-md-6">
         <?php
         $form = ActiveForm::begin();
+        ?>
 
-        /** @var $commentCreateForm */
-        echo Html::activeHiddenInput($commentCreateForm, 'id');
 
+        <?= Html::activeHiddenInput($commentCreateForm, 'id') ?>
+
+        <?php
         if (\Yii::$app->getUser()->getIsGuest()) {
-            echo $form->field($commentCreateForm, 'from')
-                ->textInput();
+            echo $form->field($commentCreateForm, 'from')->textInput();
         }
 
         $options = [];
         if ($widget->comment->isNewRecord) {
             $options['data-role'] = 'new-comment';
         }
-        echo $form->field($commentCreateForm, 'text')
-            ->textarea($options);
-
         ?>
+
+        <?= $form->field($commentCreateForm, 'text')->textarea($options) ?>
+
         <div class="actions">
             <?php
             echo Html::submitButton(\Yii::t('app', 'Post comment'), [
