@@ -8,7 +8,7 @@ use yii\helpers\Html;
 /* @var $searchModel \beckson\comments\models\queries\CommentQuery */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('common', 'Comments');
+$this->title = Yii::t('app', 'Comments');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="comments-index">
@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('common', 'Create Comment'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create Comment'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <div>
         <?= GridView::widget([

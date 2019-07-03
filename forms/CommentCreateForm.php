@@ -6,6 +6,7 @@ use beckson\comments;
 use beckson\comments\Module;
 use yii\base\Model as BaseModel;
 use beckson\comments\models\Comment;
+use beckson\comments\models\queries\CommentQuery;
 
 /**
  * Class CommentCreateForm
@@ -77,15 +78,12 @@ class CommentCreateForm extends BaseModel
     {
         $comment = $this->comment;
 
-        $commentModelClassName = comments\Module::instance()->model('comment');
-
         if (empty($this->id)) {
-            $comment = \Yii::createObject($commentModelClassName);
+            $comment = new Comment();
         } elseif ($this->id > 0 && $comment->id !== $this->id) {
-            /** @var Comments\models\Comment $CommentModel */
-            $commentModel = \Yii::createObject($commentModelClassName);
-            $comment = $commentModel::find()
-                ->byId($this->id)
+
+            $commentModel = new CommentQuery();
+            $comment = $commentModel->findById($this->id)
                 ->one();
 
             if (!($comment instanceof Comment)) {

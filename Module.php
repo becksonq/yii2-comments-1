@@ -49,6 +49,8 @@ class Module extends BaseModule
         // Merge the default model classes
         // with the user defined ones.
         $this->defineModelClasses();
+
+        $this->registerTranslations();
     }
 
     /**
@@ -116,4 +118,24 @@ class Module extends BaseModule
         return $modelData;
     }
 
+    public function registerTranslations()
+    {
+        \Yii::$app->i18n->translations['app'] = [
+            'class'          => 'yii\i18n\PhpMessageSource',
+            'sourceLanguage' => 'en-US',
+            'basePath'       => '@vendor/beckson/yii2-comments/messages',
+        ];
+    }
+
+    /**
+     * @param $category
+     * @param $message
+     * @param array $params
+     * @param null $language
+     * @return mixed
+     */
+    public static function t($category, $message, $params = [], $language = null)
+    {
+        return \Yii::t('@vendor/beckson/yii2-comments/' . $category, $message, $params, $language);
+    }
 }

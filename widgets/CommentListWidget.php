@@ -72,18 +72,15 @@ class CommentListWidget extends Widget
 
         $this->processDelete();
 
-        /** @var Comment $commentModel */
-        $commentModel = \Yii::createObject(Module::instance()->model('comment'));
-        /** @var CommentQuery $commentsQuery */
-        $commentsQuery = $commentModel::find()
-            ->byEntity($this->entity);
+        $commentQuery = new CommentQuery();
+        $query = $commentQuery->findByEntity($this->entity);
 
         if (false === $this->showDeleted) {
-            $commentsQuery->withoutDeleted();
+            $commentQuery->withoutDeleted($query);
         }
 
         $dataProvider = new ActiveDataProvider([
-            'query'      => $commentsQuery->with(['author', 'lastUpdateAuthor']),
+            'query'      => $query->with(['author', 'lastUpdateAuthor']),
             'pagination' => $this->pagination,
             'sort'       => $this->sort,
         ]);
@@ -98,16 +95,14 @@ class CommentListWidget extends Widget
 
     private function processDelete()
     {
-        $delete = (int)\Yii::$app->getRequest()->get('delete-comment');
-        if ($delete > 0) {
+        $id = (int)\Yii::$app->getRequest()->get('delete-comment');
+        if ($id > 0) {
 
             /** @var Comment $model */
-            $model = \Yii::createObject(Module::instance()->model('comment'));
+            $commentQuery = new CommentQuery();
 
             /** @var Comment $comment */
-            $comment = $model::find()
-                ->byId($delete)
-                ->one();
+            $comment = $commentQuery->findById($id)->one();
 
             if ($comment->isDeleted()) {
                 return;

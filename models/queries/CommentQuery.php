@@ -3,9 +3,9 @@
 namespace beckson\comments\models\queries;
 
 use beckson\comments\models\Comment;
-use beckson\comments\Module;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
+use yii\base\Model;
 
 /**
  * Class CommentQuery
@@ -14,23 +14,48 @@ use yii\db\ActiveQuery;
 class CommentQuery extends Comment
 {
     /**
-     * @param $id
-     * @param ActiveQuery $query
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function byId($id, ActiveQuery $query)
+    public function rules()
     {
-        return $query->andWhere(['id' => $id]);
+        return [
+            [['id', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['entity', 'from', 'text'], 'safe'],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function scenarios()
+    {
+        // bypass scenarios() implementation in the parent class
+        return Model::scenarios();
+    }
+
+    /**
+     * @param $id
+     * @return ActiveQuery
+     */
+    public function findById($id)
+    {
+        $query = Comment::find()
+            ->where(['id' => $id]);
+
+        return $query;
     }
 
     /**
      * @param $entity
-     * @param ActiveQuery $query
-     * @return ActiveQuery
+     * @return object|ActiveQuery
+     * @throws \yii\base\InvalidConfigException
      */
-    public function byEntity($entity, ActiveQuery $query)
+    public function findByEntity($entity)
     {
-        return $query->andWhere(['entity' => $entity]);
+        $query = Comment::find()
+            ->where(['entity' => $entity]);
+
+        return $query;
     }
 
     /**
@@ -40,10 +65,7 @@ class CommentQuery extends Comment
      */
     public function withoutDeleted(ActiveQuery $query)
     {
-        /** @var Comment $commentModel */
-        $commentModel = \Yii::createObject(Module::instance()->model('comment'));
-
-        return $query->andWhere(['deleted' => $commentModel::NOT_DELETED]);
+        return $query->andWhere(['deleted' => Comment::NOT_DELETED]);
     }
 
     public function search($params)

@@ -18,7 +18,6 @@ $widget = $this->context;
         $form = ActiveForm::begin();
         ?>
 
-
         <?= Html::activeHiddenInput($commentCreateForm, 'id') ?>
 
         <?php
@@ -26,7 +25,7 @@ $widget = $this->context;
             echo $form->field($commentCreateForm, 'from')->textInput();
         }
 
-        $options = [];
+        $options = ['rows' => 3];
         if ($widget->comment->isNewRecord) {
             $options['data-role'] = 'new-comment';
         }
@@ -34,16 +33,11 @@ $widget = $this->context;
 
         <?= $form->field($commentCreateForm, 'text')->textarea($options) ?>
 
-        <div class="actions">
-            <?php
-            echo Html::submitButton(\Yii::t('app', 'Post comment'), [
-                'class' => 'btn btn-primary',
-            ]);
-            echo Html::resetButton(\Yii::t('app', 'Cancel'), [
-                'class' => 'btn btn-link',
-            ]);
-            ?>
+        <div class="form-group">
+            <?= Html::submitButton(\Yii::t('app', 'Post comment'), ['class' => 'btn btn-primary',]) ?>
+            <?= Html::resetButton(\Yii::t('app', 'Cancel'), ['class' => 'btn btn-link',]) ?>
         </div>
+
         <?php ActiveForm::end(); ?>
     </div>
 </div>

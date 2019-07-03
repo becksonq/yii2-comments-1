@@ -2,7 +2,7 @@
 
 namespace beckson\comments\models;
 
-//use beckson\comments;
+
 use beckson\comments\Permission;
 use beckson\comments\Module;
 
@@ -153,11 +153,11 @@ class Comment extends \yii\db\ActiveRecord
      * @return object|\yii\db\ActiveQuery
      * @throws \yii\base\InvalidConfigException
      */
-    public static function find()
+    /*public static function find()
     {
         return \Yii::createObject(
             Module::instance()->model('commentQuery'),
             [get_called_class()]
         );
-    }
+    }*/
 }
